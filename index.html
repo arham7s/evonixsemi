@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evoxia</title>
+<style>
+:root{--bg:#eef1f2;--card:#fff;--ink:#14201a;--mute:#566660;--line:#d5dcdc;--g:#1f6b3a;--g2:#dff0e4;--hot:#6b4be0;--hot2:#e9e4fb;--bad:#b8452f;--bad2:#f7e3de;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101615;--card:#18201e;--ink:#e6eeea;--mute:#98a8a2;--line:#2c3834;--g:#59c47f;--g2:#1c3326;--hot:#a897ff;--hot2:#2a2447;--bad:#f08b73;--bad2:#3a2420}}
+:root[data-theme="dark"]{--bg:#101615;--card:#18201e;--ink:#e6eeea;--mute:#98a8a2;--line:#2c3834;--g:#59c47f;--g2:#1c3326;--hot:#a897ff;--hot2:#2a2447;--bad:#f08b73;--bad2:#3a2420}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Iowan Old Style",serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem)}h2{font-size:1.7rem}h3{font-size:1.15rem}
+p{margin:.4em 0 1em;max-width:68ch}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+header{padding:36px 0 18px}
+header p{font-size:1.15rem;color:var(--mute)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:8px;padding-bottom:8px}
+nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:20px;font:inherit;font-size:.92rem;cursor:pointer}
+nav button[aria-selected=true]{background:var(--g);color:#fff;border-color:var(--g)}
+button:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+section{display:none;padding:26px 0 60px}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.big{font:700 2rem Georgia,serif;color:var(--g)}
+.mute{color:var(--mute);font-size:.92rem}
+.chain{display:flex;gap:0;overflow-x:auto;padding:6px 0}
+.chain button{flex:1 0 118px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:12px 8px;font:inherit;cursor:pointer;clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%,12% 50%);margin-right:-10px;text-align:center}
+.chain button.me{border-color:var(--hot);background:var(--hot2)}
+.chain button[aria-pressed=true]{background:var(--g);color:#fff}
+.chain button b{display:block;font-size:.95rem}.chain button span{font-size:.8rem}
+.detail{min-height:96px;border-left:5px solid var(--g);background:var(--card);padding:14px 16px;border-radius:0 10px 10px 0;margin-top:10px}
+.tabs2{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tabs2 button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 13px;border-radius:8px;font:inherit;cursor:pointer}
+.tabs2 button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.route{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.step{padding:9px 12px;border-radius:8px;border:2px solid var(--line);background:var(--card);font-size:.9rem}
+.step.e{border-color:var(--hot);background:var(--hot2)}
+.step.x{border-color:var(--bad);background:var(--bad2)}
+.arrow{color:var(--mute)}
+.bar{display:grid;grid-template-columns:90px 1fr 110px;gap:8px;align-items:center;margin:8px 0;font-size:.92rem}
+.bar i{display:block;height:22px;border-radius:5px;width:0;transition:width .6s}
+.bar .a{background:var(--hot)}.bar .b{background:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+.scroll{overflow-x:auto}
+.tl{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.tl button{text-align:left;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:12px;border-radius:10px;font:inherit;cursor:pointer}
+.tl button[aria-pressed=true]{border-color:var(--g);background:var(--g2)}
+.fun div{margin:6px auto;padding:10px 14px;color:#fff;border-radius:6px;display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+.donut{width:170px;height:170px;border-radius:50%;background:conic-gradient(#2d8a4f 0 45%,#6bb27f 45% 70%,#a3cdb0 70% 85%,#7b6be0 85% 100%);position:relative;flex:none}
+.donut:after{content:"₹15 Cr";position:absolute;inset:34px;background:var(--card);border-radius:50%;display:grid;place-items:center;font:700 1.1rem Georgia,serif}
+.row{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.tier{border-left:5px solid var(--g);padding-left:12px;margin:12px 0}
+.flag{border-left:5px solid var(--bad);background:var(--card);padding:12px 16px;margin:10px 0;border-radius:0 10px 10px 0}
+.ok{border-left-color:var(--g)}
+.rev{display:flex;gap:18px;align-items:flex-end;height:170px;margin-top:8px}
+.rev div{flex:1;background:var(--g);border-radius:6px 6px 0 0;position:relative;min-height:4px;color:var(--ink)}
+.rev div span{position:absolute;top:-22px;left:0;right:0;text-align:center;font-size:.85rem}
+.gl{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.gl div{font-size:.9rem}
+footer{padding:20px 0 40px;color:var(--mute);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:520px){.bar{grid-template-columns:70px 1fr 90px}}
+</style>
+<style>
+body{background:radial-gradient(900px 500px at 90% 0,var(--hot2),transparent 60%),radial-gradient(800px 500px at 0 30%,var(--g2),transparent 60%),var(--bg);background-attachment:fixed}
+header.hero{position:relative;overflow:hidden;color:#fff;padding:60px 0 70px;background:linear-gradient(135deg,#0a3320 0%,#12513a 45%,#352a8a 100%)}
+header.hero:before,header.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:drift 14s ease-in-out infinite alternate}
+header.hero:before{width:380px;height:380px;background:#5ee08f;left:-90px;top:-120px}
+header.hero:after{width:420px;height:420px;background:#8a6bff;right:-120px;bottom:-180px;animation-delay:-6s}
+header.hero .wrap{position:relative;z-index:1}
+header.hero:last-child{}
+.hero{background-image:linear-gradient(135deg,#0a3320 0%,#12513a 45%,#352a8a 100%),repeating-linear-gradient(60deg,rgba(255,255,255,.04) 0 1px,transparent 1px 38px)}
+.logo{width:64px;height:64px;filter:drop-shadow(0 6px 18px rgba(94,224,143,.6));animation:float 5s ease-in-out infinite}
+header.hero h1{font-size:clamp(3rem,10vw,5.6rem);letter-spacing:.04em;margin:.1em 0 .15em;background:linear-gradient(90deg,#fff,#bff5d2 60%,#cdbfff);-webkit-background-clip:text;background-clip:text;color:transparent}
+header.hero p{color:#d9efe2;font-size:1.2rem;max-width:56ch}
+.hs{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hs div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:14px;padding:10px 16px;min-width:130px}
+.hs b{display:block;font:700 1.35rem Georgia,serif}.hs span{font-size:.8rem;color:#c8e6d4}
+nav{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+nav button{transition:transform .2s,box-shadow .2s}
+nav button:hover{transform:translateY(-2px)}
+nav button[aria-selected=true]{background:linear-gradient(135deg,var(--g),#3a8f6a);box-shadow:0 6px 16px rgba(31,107,58,.35)}
+section.on{animation:rise .5s ease both}
+h2{display:inline-block;position:relative;padding-bottom:10px}
+h2:after{content:"";position:absolute;left:0;bottom:0;height:4px;width:64%;border-radius:4px;background:linear-gradient(90deg,var(--g),var(--hot))}
+.card{border-radius:16px;box-shadow:0 8px 24px rgba(20,40,30,.07);transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(20,40,30,.14)}
+.big{background:linear-gradient(90deg,var(--g),var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent;font-size:2.4rem}
+.chain button{transition:transform .2s,background .2s;box-shadow:none}
+.chain button:hover{transform:translateY(-4px)}
+.chain button.me{animation:pulse 2.4s ease-in-out infinite}
+.chain button[aria-pressed=true]{background:linear-gradient(135deg,var(--g),#3a8f6a)}
+.detail{border-radius:0 16px 16px 0;border-left:6px solid;border-image:linear-gradient(var(--g),var(--hot)) 1;box-shadow:0 6px 18px rgba(20,40,30,.07);animation:rise .35s ease both}
+.tl button,.tabs2 button{border-radius:14px;transition:transform .2s,box-shadow .2s}
+.tl button:hover,.tabs2 button:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(20,40,30,.12)}
+.tabs2 button[aria-pressed=true]{background:linear-gradient(135deg,var(--hot),#4a37b8);color:#fff;border-color:transparent}
+.step{border-radius:12px;animation:rise .4s ease both}
+.bar .a{background:linear-gradient(90deg,#4a37b8,var(--hot))}.bar .b{background:linear-gradient(90deg,#8f2f1c,var(--bad))}
+.bar i{height:26px;border-radius:8px}
+.fun div{border-radius:10px;box-shadow:0 6px 16px rgba(20,40,30,.15)}
+.rev div{background:linear-gradient(180deg,var(--hot),var(--g))}
+.flag{border-radius:0 14px 14px 0;box-shadow:0 6px 16px rgba(20,40,30,.07)}
+table{border-radius:12px;overflow:hidden}
+th{background:var(--g2)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(107,75,224,.22)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+</style>
+<style>
+.pipe{display:flex;align-items:flex-start;overflow-x:auto;padding:16px 4px 8px}
+.nd{flex:none;width:118px;text-align:center;background:none;border:0;color:var(--ink);font:inherit;cursor:pointer;padding:0}
+.rg{width:88px;height:88px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;background:conic-gradient(var(--bad) calc(var(--p)*1%),var(--line) 0);transition:transform .25s,box-shadow .25s}
+.rg i{width:66px;height:66px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-style:normal;font-size:1.8rem}
+.nd:hover .rg,.nd[aria-pressed=true] .rg{transform:scale(1.1);box-shadow:0 8px 22px rgba(20,40,30,.25)}
+.nd.me .rg{background:conic-gradient(var(--hot),var(--g),var(--hot));animation:pulse 2.4s ease-in-out infinite}
+.nd b{display:block;font-size:.95rem}.nd small{color:var(--mute);font-size:.78rem}.nd.me small{color:var(--hot);font-weight:700}
+.cn{flex:1 0 24px;margin-top:42px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--g) 8px,transparent 8px) 0 0/14px 4px repeat-x;animation:flow .8s linear infinite}
+@keyframes flow{to{background-position:14px 0}}
+.lanes{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));margin:10px 0}
+.lane{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(20,40,30,.07)}
+.fb{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;opacity:.4;transform:scale(.97);transition:all .45s}
+.fb.lit{opacity:1;transform:none}.fb em{font-style:normal;font-size:1.5rem}
+.lane.E .fb.lit{border-color:var(--hot);background:var(--hot2)}.lane.X .fb.lit{border-color:var(--bad);background:var(--bad2)}
+.ar{text-align:center;color:var(--mute);line-height:1;height:20px;font-size:1.1rem}
+.meter{height:12px;border-radius:8px;background:var(--line);overflow:hidden;margin-top:14px}.meter i{display:block;height:100%;width:0;transition:width 1.4s}
+.lane.E .meter i{background:var(--hot)}.lane.X .meter i{background:var(--bad)}
+.rx{width:100%;height:auto;display:block}.rx text{fill:var(--ink);font:600 15px system-ui}
+.part{cursor:pointer;outline:none;transition:filter .3s}.part:hover,.part.sel{filter:drop-shadow(0 0 10px var(--hot))}
+.track{position:relative;min-width:640px;padding-top:34px}
+.tline{position:absolute;top:84px;left:12.5%;right:12.5%;height:6px;background:var(--line);border-radius:6px}
+.tline i{display:block;height:100%;width:9%;background:linear-gradient(90deg,var(--g),var(--hot));border-radius:6px}
+.today{position:absolute;top:2px;left:16%;font-size:.82rem;font-weight:700;color:var(--hot)}
+.tn{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative}
+.tn button{background:none;border:0;color:var(--ink);font:inherit;text-align:center;cursor:pointer;padding:6px;border-radius:14px;transition:background .2s}
+.tn button[aria-pressed=true]{background:var(--g2)}
+.ic{width:56px;height:56px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;background:var(--card);border:3px solid var(--g);position:relative;z-index:1}
+.cb{height:90px;display:flex;align-items:flex-end;justify-content:center;margin:10px 0 4px}
+.cb i{width:42px;height:calc(var(--h)*1%);background:linear-gradient(180deg,var(--hot),var(--g));border-radius:8px 8px 0 0;transition:height .8s}
+.nest{position:relative;width:min(100%,440px);aspect-ratio:1;margin:12px auto}
+.c{position:absolute;left:50%;bottom:0;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(255,255,255,.55);color:#fff;cursor:pointer;font:inherit;display:flex;justify-content:center;align-items:flex-start;padding:3% 4% 0;transition:filter .2s,transform .2s;line-height:1.25}
+.c:hover{filter:brightness(1.18)}.c small{font-size:.74rem;opacity:.95}
+.c0{width:100%;height:100%;background:#1f6b3a}.c1{width:76%;height:76%;background:#2d8a4f}.c2{width:52%;height:52%;background:#4a9b66}.c3{width:30%;height:30%;background:#6b4be0;padding-top:20%;align-items:center}
+.lg{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:1px solid var(--line);color:var(--ink);font:inherit;padding:8px 10px;border-radius:12px;margin:6px 0;cursor:pointer}
+.lg:hover{background:var(--g2)}.lg i{width:18px;height:18px;border-radius:5px;flex:none}
+.seg{transition:stroke-dasharray 1.1s ease,stroke-width .25s;cursor:pointer}
+</style>
+<style>
+.detail{margin:14px 0 26px}
+h3{margin-top:1.6em}
+.card h3,.lane h3{margin-top:0}
+.tline{top:65px}
+.rx{max-height:min(50vh,400px);margin:0 auto}
+.pipe{padding-bottom:14px}
+@media (min-width:1000px){
+ .wrap{max-width:1240px;padding:0 32px}
+ body{font-size:17px}
+ header.hero{padding:84px 0 96px}
+ header.hero p{font-size:1.3rem;max-width:62ch}
+ section{padding:34px 0 80px}
+ h2{font-size:2rem;margin-bottom:.8em}
+ .grid{gap:18px}
+ .nd{width:140px}.rg{width:100px;height:100px}.rg i{width:76px;height:76px;font-size:2.1rem}.cn{margin-top:48px}
+ .lanes{gap:24px}.fb{padding:12px 16px}
+ .nest{width:min(100%,460px)}
+ .track{min-width:0}
+}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><polygon points="32,3 58,18 58,46 32,61 6,46 6,18" fill="#3fb26b"/><polygon points="32,3 58,18 32,33 6,18" fill="#8fe3ab"/><polygon points="32,33 58,18 58,46 32,61" fill="#1f7a45"/><polygon points="32,20 44,27 32,34 20,27" fill="#0d3b22"/></svg>
+<h1>Evoxia</h1>
+<p>Making India’s solar-grade silicon at home: cheaper, cleaner and without toxic waste. Explore the business, the technology, the traction and the plan, one tab at a time.</p>
+<div class="hs"><div><b>₹15 Cr</b><span>funding ask</span></div><div><b>11 kWh/kg</b><span>claimed energy use</span></div><div><b>7N</b><span>claimed purity</span></div><div><b>Jun 2028</b><span>domestic sourcing rule</span></div></div>
+</div></header>
+<nav><div class="wrap" role="tablist" id="tabs"></div></nav>
+<main class="wrap">
+
+<section id="s0">
+<h2>The problem Evoxia is going after</h2>
+<p>Solar panels are built in stages, like a supply chain from rock to rooftop. Tap each stage to see who controls it. Evoxia works at the very start, the part where India depends fully on imports.</p>
+<div class="pipe" id="chain"></div>
+<div class="detail" id="chainD"></div>
+<div class="grid">
+<div class="card"><div class="big">100%</div>of solar-grade polysilicon used in India is imported (deck claim)</div>
+<div class="card"><div class="big">94%+</div>of world polysilicon production is controlled by China (deck claim, see analyst notes)</div>
+<div class="card"><div class="big">Jun 2028</div>ALMM List-III rule: solar makers must buy wafers and ingots made in India</div>
+</div>
+<div class="card"><h3>Why that last rule matters</h3>
+<p>If wafers and ingots must be made in India, someone has to supply the raw silicon for them. Big Indian solar firms are already building ingot and wafer plants. Evoxia’s pitch is simple: be the Indian supplier of that raw silicon, so those plants do not need to import it.</p></div>
+<h3>Words you will see</h3>
+<div class="gl">
+<div class="card"><b>HPQ</b><br>High-purity quartz. Very clean sand-like rock, the starting material.</div>
+<div class="card"><b>Polysilicon</b><br>Ultra-pure silicon in chunks. The raw ingredient for solar and chips.</div>
+<div class="card"><b>Ingot and wafer</b><br>Polysilicon is melted into a big crystal (ingot), then sliced thin (wafers).</div>
+<div class="card"><b>7N purity</b><br>99.99999% pure. Each N is one more nine. Only about 1 atom in 10 million is something else.</div>
+<div class="card"><b>MTPA</b><br>Metric tonnes per annum, the yearly output of a plant.</div>
+<div class="card"><b>Capex</b><br>The one-time cost of building a plant.</div>
+</div>
+</section>
+
+<section id="s1">
+<h2>What Evoxia does and how</h2>
+<p>Evoxia turns quartz into solar-grade silicon. The standard industry route is long and chemical-heavy. Evoxia claims a shorter route that uses a very hot reactor to pull the oxygen out of quartz directly.</p>
+<div class="lanes"><div class="lane E"><h3>🟣 Evoxia route <small class="mute">4 steps</small></h3><div id="laneE"></div><div class="meter"><i data-w="9"></i></div><div class="mute">⚡ 11 kWh per kg</div></div>
+<div class="lane X"><h3>🔴 Conventional route <small class="mute">5 steps</small></h3><div id="laneX"></div><div class="meter"><i data-w="75"></i></div><div class="mute">⚡ 60–120 kWh per kg</div></div></div>
+<div class="tabs2"><button id="replay">▶ Replay both routes</button></div>
+<div class="detail" id="routeD">Tap any box to see what happens in that step.</div>
+<h3>Evoxia’s three stages</h3>
+<p class="mute">Tap a part of the reactor to learn what it does.</p>
+<div class="card" style="padding:8px"><svg id="rx" class="rx" viewBox="0 0 680 320" role="img" aria-label="Diagram of the Evoxia process: quartz goes into a hot reactor, silicon comes out, water vapour is the only waste">
+<defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset=".55" stop-color="#ff5e62"/><stop offset="1" stop-color="#6b4be0"/></linearGradient><radialGradient id="pg"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#8a6bff" stop-opacity="0"/></radialGradient></defs>
+<path d="M200 90H260M420 190H500" stroke="var(--g)" stroke-width="4" stroke-dasharray="8 6" fill="none"><animate attributeName="stroke-dashoffset" from="14" to="0" dur=".8s" repeatCount="indefinite"/></path>
+<path d="M390 40V18H470" stroke="#3fb2d9" stroke-width="4" stroke-dasharray="8 6" fill="none"><animate attributeName="stroke-dashoffset" from="14" to="0" dur=".8s" repeatCount="indefinite"/></path>
+<text x="478" y="24" style="fill:#3fb2d9">💧 H₂O only, no toxic waste</text>
+<g class="part" data-i="0" tabindex="0" role="button"><path d="M40 30H200L160 120H80Z" fill="var(--g2)" stroke="var(--g)" stroke-width="3"/>
+<circle cx="90" cy="58" r="12" fill="#cfd8d6"/><circle cx="125" cy="70" r="14" fill="#e6ecea"/><circle cx="160" cy="55" r="11" fill="#bcc8c5"/><circle cx="115" cy="98" r="10" fill="#dbe3e1"/><text x="40" y="148">1 · Quartz in</text></g>
+<g class="part" data-i="1" tabindex="0" role="button"><rect x="260" y="40" width="160" height="210" rx="20" fill="url(#fg)" stroke="var(--hot)" stroke-width="3"/>
+<ellipse cx="340" cy="150" rx="55" ry="75" fill="url(#pg)"><animate attributeName="opacity" values=".35;1;.35" dur="1.6s" repeatCount="indefinite"/></ellipse>
+<path d="M300 90Q320 130 340 100T380 140" stroke="#fff" stroke-width="3" fill="none" opacity=".8"><animate attributeName="d" values="M300 90Q320 130 340 100T380 140;M300 100Q320 80 340 130T380 110;M300 90Q320 130 340 100T380 140" dur="2s" repeatCount="indefinite"/></path>
+<text x="262" y="282">2 · Hot reactor</text></g>
+<g class="part" data-i="2" tabindex="0" role="button"><polygon points="510,200 540,150 580,175 560,225" fill="#9aa7ad" stroke="var(--g)" stroke-width="3"/><polygon points="570,220 600,170 640,200 615,235" fill="#c3ced3" stroke="var(--g)" stroke-width="3"/><circle cx="545" cy="250" r="9" fill="var(--hot)"/><text x="500" y="282">3 · Test and pack</text></g>
+<circle r="6" fill="#fff" stroke="var(--g)" stroke-width="2"><animateMotion dur="3s" repeatCount="indefinite" path="M200 90H260"/></circle>
+<circle r="6" fill="#fff" stroke="var(--g)" stroke-width="2"><animateMotion dur="3s" begin="1.2s" repeatCount="indefinite" path="M420 190H500"/></circle>
+</svg></div>
+<div class="detail" id="wfD"></div>
+<div class="card"><h3>What the product looks like</h3>
+<p>Chunks of polysilicon, 5 to 50 mm, made for pulling crystal ingots by the Czochralski method (dipping a seed into molten silicon and slowly lifting a crystal out).</p>
+<div class="scroll"><table><tr><th>Spec</th><th>Evoxia claim</th><th>Plain meaning</th></tr>
+<tr><td>Purity</td><td>≥99.99999% (7N)</td><td>Clean enough for solar</td></tr>
+<tr><td>Boron, phosphorus</td><td>≤0.01 ppm each</td><td>The two hardest impurities to remove, kept very low</td></tr>
+<tr><td>Iron</td><td>10× lower than usual</td><td>Less metal contamination</td></tr>
+<tr><td>Sodium, potassium</td><td>≤0.5 ppm</td><td>Fewer alkali metal traces</td></tr>
+<tr><td>Standard</td><td>SEMI standards</td><td>Industry quality benchmark</td></tr></table></div></div>
+<div class="card"><h3>Extra income streams</h3><p>Besides silicon, the deck lists biofuels captured from the furnace’s flue gas and carbon credits. The deck marks biofuels with an asterisk and gives no numbers for either.</p></div>
+</section>
+
+<section id="s2">
+<h2>Traction so far</h2>
+<p>Evoxia is young (incorporated 2024) and still proving the technology in a lab. Its traction is mostly in awards, grants, a strong team and customers who say they would buy, not in sales.</p>
+<div class="grid">
+<div class="card"><div class="big">₹0</div>revenue today. First revenue projected for FY26-27 (₹0.24 Cr)</div>
+<div class="card"><div class="big">2 of 5</div>big buyers in Tiers 1 and 2 named as committed or planning; none has signed a purchase order in the deck</div>
+<div class="card"><div class="big">6+</div>awards, grants and programmes (below)</div>
+</div>
+<h3>Who might buy (tap a tier)</h3>
+<div class="tabs2" id="tierBtns"></div>
+<div class="detail" id="tierD"></div>
+<h3>Recognition</h3>
+<div class="card"><ul>
+<li>Global Student Entrepreneur Award, GSEA Kerala 2025 (won)</li>
+<li>Future Stars U25 Grant</li>
+<li>HDFC ArthX Grant via AIC ISB Mohali and HDFC Bank</li>
+<li>Quest for Clean Air Accelerator by Maruti Suzuki with IIT Delhi</li>
+<li>Forbes India “Top 100 Startups to Watch 2025” via the Leap to Unicorn programme</li>
+<li>Tech30 Award, TechSparks 2026 (YourStory)</li></ul></div>
+<h3>Team</h3>
+<div class="grid">
+<div class="card"><b>Harsh Chordia</b><br>Co-founder, CEO. Emergent Ventures fellow, Stanford, industrial engineer.</div>
+<div class="card"><b>Nirmala Chordia</b><br>Co-founder, COO. 12+ years in manufacturing, 3+ in marketing.</div>
+<div class="card"><b>Dr. Thirumurgan N</b><br>Experimental scientist. PhD Physics.</div>
+<div class="card"><b>Dr. Jyothikrishna P</b><br>Simulation scientist. Limoges and Queensland.</div>
+<div class="card"><b>Mainak Patra</b><br>Chief of Staff.</div>
+</div>
+<div class="card"><b>Advisors:</b> Dr. Satyananda Kar (IIT Delhi, plasma physics), Balasubramanian P (40+ years in silicon ingot, wafer and polysilicon plants), Dr. Arup Kumar Mandal (NIT Durgapur).</div>
+</section>
+
+<section id="s3">
+<h2>Competition: Evoxia vs established makers</h2>
+<p>The deck compares itself with Wacker, Adani, Indosol and Reliance. Choose a measure to see the claimed gap. Bars are scaled to the larger value; ranges use the midpoint.</p>
+<div class="tabs2" id="mBtns"></div>
+<div class="card" id="bars"></div>
+<div class="detail" id="mD"></div><div class="card"><h3>Try it: size a plant</h3><p class="mute">Drag to pick a yearly output. Evoxia’s deck gives costs per 10,000 t; this assumes they scale in a straight line, which real plants rarely do.</p>
+<label for="cap"><b id="capL"></b></label><input id="cap" type="range" min="1000" max="14400" step="200" value="7200" style="width:100%;accent-color:var(--hot)">
+<div class="grid" id="calc"></div></div>
+<div class="card scroll"><table>
+<tr><th>Measure</th><th>Evoxia (claim)</th><th>Incumbents (claim)</th></tr>
+<tr><td>Energy</td><td>11 kWh/kg</td><td>60–120 kWh/kg</td></tr>
+<tr><td>Capex per 10,000 t/yr</td><td>$7M</td><td>$38–56M</td></tr>
+<tr><td>Toxic by-products</td><td>None (water)</td><td>11–27 t silicon tetrachloride per t silicon</td></tr>
+<tr><td>Purity</td><td>7N and above</td><td>6N to 11N</td></tr>
+<tr><td>Boron and phosphorus removal</td><td>Proprietary equipment designs</td><td>Costly extra purification steps</td></tr>
+<tr><td>Supply chain</td><td>100% domestic</td><td>Import dependent</td></tr></table></div>
+<div class="card"><h3>Where incumbents are stronger</h3><p>They already run plants at scale, hold customer relationships and reach up to 11N purity. Evoxia’s edge is mainly cost and cleanliness, and it has not yet shown output at scale.</p></div>
+</section>
+
+<section id="s4">
+<h2>The plan and the money</h2>
+<h3>Roadmap (tap a phase)</h3>
+<div class="scroll"><div class="track" id="plan"></div></div>
+<div class="detail" id="planD"></div>
+<h3>Market size, from big to Evoxia’s first step</h3>
+<div class="card"><div class="nest" id="nest">
+<button class="c c0" data-i="0"><span><b>$18.4B</b><br><small>Global solar-grade polysilicon</small></span></button>
+<button class="c c1" data-i="1"><span><b>$2B</b><br><small>India demand, 2028–30</small></span></button>
+<button class="c c2" data-i="2"><span><b>$600M</b><br><small>India obtainable by 2030</small></span></button>
+<button class="c c3" data-i="3"><span><b>$2M</b><br><small>Pilot, year 0–1</small></span></button></div>
+<div class="detail" id="mkD">Tap a circle. Each ring is the slice of the one around it that Evoxia can realistically reach. Circles are not to scale.</div></div><h3>Revenue projection and margins</h3>
+<div class="grid">
+<div class="card"><b>Revenue, ₹ crore</b>
+<div class="rev"><div style="height:2%"><span>0.24</span></div><div style="height:13%"><span>6.57</span></div><div style="height:100%"><span>48.79</span></div></div>
+<div class="row mute" style="justify-content:space-around"><span>FY26-27</span><span>FY27-28</span><span>FY28-29</span></div></div>
+<div class="card"><b>At ₹500/kg and 1,000 t a year</b><p class="mute">Cost of goods 42%, operating cost 17%, profit before interest and tax (EBITDA) 41%.</p>
+<div style="display:flex;height:28px;border-radius:6px;overflow:hidden"><div style="width:42%;background:#bd6a3a"></div><div style="width:17%;background:#c9a24a"></div><div style="width:41%;background:var(--g)"></div></div>
+<p class="mute">Orange: COGS. Gold: opex. Green: EBITDA.</p></div></div>
+<h3>The ask: ₹15 Cr (about $1.5M)</h3>
+<div class="card row"><svg id="dn" viewBox="0 0 200 200" width="230" height="230" role="img" aria-label="Use of funds"></svg><div id="dl" style="flex:1;min-width:220px"></div></div><div class="card"><b>Vision:</b> avoid 1 gigaton of CO2e by 2040. The deck links this to seven UN goals, including clean energy, climate action and industry innovation.</div>
+</section>
+
+<section id="s5">
+<h2>Analyst notes: what to check next</h2>
+<p>These are my observations from reading the deck, not claims by Evoxia. They are good questions for a diligence call.</p>
+<div class="flag ok"><b>What is strong.</b> A real policy tailwind (ALMM List-III), named buyers, a clear cost story, credible advisors, and a small first raise.</div>
+<div class="flag"><b>Proof of purity.</b> The spec table states 7N as achieved, but the roadmap lists ICP-MS data showing at least 7N as a milestone for July to Dec 2026. Ask for the lab reports today.</div>
+<div class="flag"><b>Reactor size vs output.</b> The pilot plans a 100 kW plasma reactor for 1,000 t a year. At the claimed 11 kWh/kg, 1,000 t needs about 11 GWh a year, roughly 1.3 MW of continuous power. 100 kW would give roughly 80 t a year at full-time running. Worth asking how this reconciles (my own arithmetic).</div>
+<div class="flag"><b>Funding gap.</b> Pilot plant funding is ₹10.2 Cr and the ask is ₹15 Cr, but the demo plant (7,200 t) and commercial plant (14,400 t) need far more. The deck’s own article cites about ₹850 Cr per GW for polysilicon plus metallurgical silicon, against Evoxia’s $7M per 10,000 t claim.</div>
+<div class="flag"><b>Inconsistent China share.</b> The deck says over 94%, one slide shows 63%, another shows 85 to 90%. The measure (production, capacity, year) differs. Tidy this before relying on it.</div>
+<div class="flag"><b>Revenue jump.</b> ₹0.24 Cr to ₹48.79 Cr in three years, with the pilot at 1,000 t. Check the assumed price (₹500/kg), volumes and yield. Also, the demo (7,200 t) would be bigger than the FY28-29 revenue implies.</div>
+<div class="flag"><b>Buyers not yet committed in writing.</b> “Explicitly committed” in Tier 1 is not an LOI; the plan lists the first LOI as a 2027 milestone. RSOLEC is also listed as targeting first product in early 2026.</div>
+<div class="flag"><b>Technology detail.</b> The deck calls the process “proprietary high-temperature reduction” and mentions plasma, but gives no reactant, yield or IP status (patents are still to be filed). Zero toxic by-products also deserves a technical check.</div>
+</section>
+</main>
+<div class="wrap"><footer>Source: Evoxia Labs India Pvt Ltd pitch deck (confidential). Figures are company claims, not verified.</footer></div>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+var tabs=["Problem","What it does","Traction","Competition","Plan and money","Analyst notes"];
+var tb=$("#tabs");
+tabs.forEach(function(t,i){var b=document.createElement("button");b.textContent=t;b.setAttribute("role","tab");b.setAttribute("aria-selected",i==0);b.onclick=function(){show(i)};tb.appendChild(b)});
+function show(i){document.querySelectorAll("section").forEach(function(s,j){s.classList.toggle("on",j==i)});tb.querySelectorAll("button").forEach(function(b,j){b.setAttribute("aria-selected",j==i)});window.scrollTo(0,0);if(i==3)drawBars();}
+$("#s0").classList.add("on");
+function pick(box,sel,i){box.querySelectorAll(sel).forEach(function(b,j){b.setAttribute("aria-pressed",j==i)})}
+function mk(box,items,cls,fn,html){items.forEach(function(it,i){var b=document.createElement("button");b.innerHTML=html(it,i);b.setAttribute("aria-pressed",i==0?"true":"false");b.onclick=function(){pick(box,"button",i);fn(i)};box.appendChild(b)})}
+
+var chain=[
+["Quartz","Starting rock","The starting material is high-purity quartz (HPQ), a very clean form of sand. Many countries have it. Evoxia plans to use five Indian HPQ sources.",""],
+["Polysilicon","China about 63% to 90%","Quartz is refined into ultra-pure silicon chunks. This is the stage where India imports everything. It is also Evoxia’s stage: the company wants to make this inside India.","me"],
+["Ingot","China about 95%","Polysilicon is melted and grown into a large single crystal, like a thick cylinder of metal. Indian firms like Premier, Waaree and Tata Power are building these plants.",""],
+["Wafer","China about 97%","The ingot is sliced into very thin discs, thinner than a credit card. These are the base of every solar cell.",""],
+["Cell","China about 79%","Each wafer is treated to turn sunlight into electricity. India already has a growing cell industry.",""],
+["Module","China about 71%","Cells are joined into the panels you see on rooftops. India assembles many panels but depends on imports for the parts upstream."," "]];
+
+var wf=[["Feedstock sourcing","Find and buy clean quartz","Evoxia starts with high-purity quartz from Indian sources. Cleaner input means less work later. The roadmap targets five Indian HPQ sources by Dec 2026."],
+["Proprietary high-temperature reduction","The core secret","A very hot reactor strips oxygen from the quartz to leave silicon. The deck names plasma reduction and a 100 kW plasma reactor for the pilot. Special equipment designs remove boron and phosphorus, the two impurities that are normally hardest and costliest to remove."],
+["Characterization and packaging","Test it, then ship it","The silicon is tested with lab methods (XRD confirms it is silicon, ICP-MS measures traces of impurities), then packed as chunks for customers’ crystal-growing furnaces."]];
+var tiers=[["Tier 1: committed","Premier Energies (10 GW ingot and wafer) and RSOLEC (5 GW ingot and wafer, needs polysilicon from day one). The deck says they have explicitly committed to buy domestic polysilicon when it is available."],
+["Tier 2: will need it","Waaree Energies (10 GW plant in Nagpur, ₹6,200 Cr), Tata Power Solar (10 GW, ₹6,500 Cr) and Avaada (5 to 10 GW wafer and cell, Maharashtra). All are building capacity that needs polysilicon in 2026 to 2028."],
+["Tier 3: later","Goldi Solar, Rayzon Solar, Emmvee and Vikram Solar. They make cells and modules only and rely on China for wafers. They would buy indirectly."]];
+var tbx=$("#tierBtns");mk(tbx,tiers,"",function(i){$("#tierD").innerHTML="<b>"+tiers[i][0]+"</b><p>"+tiers[i][1]+"</p>"},function(t){return t[0]});
+$("#tierD").innerHTML="<b>"+tiers[0][0]+"</b><p>"+tiers[0][1]+"</p>";
+
+var ms=[["Energy",11,90,"kWh per kg (range 60–120)","Making silicon is electricity-hungry. Using about one eighth as much cuts both cost and carbon, if the claim holds at scale."],
+["Plant cost",7,47,"$M per 10,000 t a year (38–56)","A cheaper plant means a smaller raise to reach scale and lower prices to customers."],
+["Toxic waste",0,19,"t silicon tetrachloride per t silicon (11–27)","The conventional route produces corrosive waste that needs careful handling. Evoxia says its route gives water instead."]];
+var mb=$("#mBtns");mk(mb,ms,"",function(i){drawBars(i)},function(m){return m[0]});
+var cur=0;
+function drawBars(i){if(i!=null)cur=i;var m=ms[cur],mx=Math.max(m[1],m[2]);$("#bars").innerHTML="<div class=bar><span>Evoxia</span><div><i class=a style='width:0' data-w='"+(m[1]/mx*100)+"'></i></div><span>"+(m[1]||"0")+"</span></div><div class=bar><span>Incumbents</span><div><i class=b style='width:0' data-w='"+(m[2]/mx*100)+"'></i></div><span>"+m[2]+" (mid)</span></div><p class=mute>"+m[3]+"</p>";$("#mD").innerHTML=m[4];setTimeout(function(){document.querySelectorAll("#bars i").forEach(function(e){e.style.width=e.dataset.w+"%"})},30)}
+drawBars(0);
+
+var plan=[["Jul to Dec 2026","Lab proof","Prove it works in the lab. 5 Indian quartz sources, first plasma run, silicon confirmed by XRD, 5+ runs, purity data at 7N or better, patents filed. Funded by grants and CCD (convertible debt)."],
+["2027","Pilot plant","Buy a 100 kW plasma reactor. Show 1,000 t a year and reproducible 7N. Sign a first letter of intent (LOI) from Premier or RSOLEC, hire a Chief Commercial Officer, apply for the PLI scheme and reach 11N semiconductor grade. Budget ₹10.2 Cr."],
+["2028","Demo plant","Scale to 7,200 t a year. Funded by a seed round. This lines up with the June 2028 domestic sourcing rule."],
+["2029","Commercial plant","14,400 t a year with multiple offtake agreements. Funded by a Series A."]];
+
+var SC=[["⛏️","Quartz",0,"Raw material","Clean, sand-like rock (HPQ). Evoxia plans five Indian sources. It is not the bottleneck."],
+["💎","Polysilicon",78,"Evoxia is here","Ultra-pure silicon chunks. China makes roughly 63–94% depending on the measure, and India imports 100% of what it uses. Evoxia wants to make this inside India.","me"],
+["🏺","Ingot",95,"China ~95%","Polysilicon is melted and grown into one big crystal. Premier, Waaree and Tata Power are building Indian ingot plants, and they will need polysilicon."],
+["🔪","Wafer",97,"China ~97%","The ingot is sliced into razor-thin discs. India’s ALMM List-III rule will require Indian wafers and ingots from June 2028."],
+["🔋","Cell",79,"China ~79%","Each wafer is turned into a cell that makes electricity from sunlight."],
+["☀️","Module",71,"China ~71%","Cells are joined into the solar panels on rooftops. India assembles many but relies on imports upstream."]];
+var cb=$("#chain");
+SC.forEach(function(c,i){if(i)cb.insertAdjacentHTML("beforeend","<div class=cn></div>");var b=document.createElement("button");b.className="nd"+(c[5]?" me":"");b.setAttribute("aria-pressed",i==1);b.style.setProperty("--p",c[2]);b.innerHTML="<div class=rg><i>"+c[0]+"</i></div><b>"+c[1]+"</b><small>"+c[3]+"</small>";b.onclick=function(){cb.querySelectorAll(".nd").forEach(function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");$("#chainD").innerHTML="<b>"+c[1]+"</b><p>"+c[4]+"</p>"};cb.appendChild(b)});
+$("#chainD").innerHTML="<b>Polysilicon</b><p>"+SC[1][4]+"</p><p class=mute>The red ring on each stage shows China’s approximate share of world output.</p>";
+
+var LE=[["⛏️","Quartz (HPQ)","Start with clean quartz from Indian sources."],["🔥","Hot reduction reactor","A proprietary high-temperature reactor strips oxygen from quartz in one main step."],["🧬","Built-in cleanup","Special equipment designs remove boron and phosphorus inside the process, so no big extra purification plant is needed."],["📦","Silicon chunks","Polysilicon chunks of 5–50 mm, tested and packed. The by-product is water."]];
+var LX=[["🪨","Metallurgical silicon","Start from lower-grade silicon made in a furnace."],["☁️","Turn into gas","React it with chlorine compounds to make chlorosilane gas."],["⚗️","Distil and purify","Boil and re-boil the gas many times. Boron and phosphorus need costly extra steps."],["🔩","Grow on hot rods","Pure silicon deposits onto rods (Siemens process). Uses 60–120 kWh per kg."],["☠️","Handle toxic waste","11–27 tonnes of corrosive silicon tetrachloride per tonne of silicon."]];
+function lane(id,L){var el=$(id);el.innerHTML="";L.forEach(function(s,i){if(i)el.insertAdjacentHTML("beforeend","<div class=ar>↓</div>");var b=document.createElement("button");b.className="fb";b.innerHTML="<em>"+s[0]+"</em><span><b>"+s[1]+"</b></span>";b.onclick=function(){b.classList.add("lit");$("#routeD").innerHTML="<b>"+s[1]+"</b><p>"+s[2]+"</p>"};el.appendChild(b)})}
+lane("#laneE",LE);lane("#laneX",LX);
+function replay(){document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("lit")});document.querySelectorAll(".meter i").forEach(function(m){m.style.width="0"});
+ var n=Math.max(LE.length,LX.length);for(var i=0;i<n;i++)(function(i){setTimeout(function(){var a=document.querySelectorAll("#laneE .fb")[i],x=document.querySelectorAll("#laneX .fb")[i];if(a)a.classList.add("lit");if(x)x.classList.add("lit");if(i==n-1)document.querySelectorAll(".meter i").forEach(function(m){m.style.width=m.dataset.w+"%"})},i*650+200)})(i)}
+$("#replay").onclick=replay;replay();
+
+var wf=[["Quartz in","Feedstock sourcing","Evoxia starts with high-purity quartz from Indian sources. Cleaner input means less work later. The roadmap targets five Indian HPQ sources by Dec 2026."],
+["Hot reactor","Proprietary high-temperature reduction","A very hot reactor strips oxygen from the quartz and leaves silicon. The deck names plasma reduction and a 100 kW plasma reactor for the pilot. Special equipment designs remove boron and phosphorus, normally the hardest impurities to remove. The exhaust is water vapour."],
+["Test and pack","Characterization and packaging","Lab tests check the result: XRD confirms it is silicon and ICP-MS measures trace impurities. Then it is packed as chunks for customers’ crystal-growing furnaces."]];
+var parts=document.querySelectorAll("#rx .part");
+function selPart(i){parts.forEach(function(p,j){p.classList.toggle("sel",j==i)});$("#wfD").innerHTML="<b>"+wf[i][0]+" · "+wf[i][1]+"</b><p>"+wf[i][2]+"</p>"}
+parts.forEach(function(p,i){p.onclick=function(){selPart(i)};p.onkeydown=function(e){if(e.key=="Enter"||e.key==" ")selPart(i)}});selPart(1);
+
+function fmt(n,d){return n.toLocaleString("en-US",{maximumFractionDigits:d||0})}
+function calc(){var t=+$("#cap").value;$("#capL").textContent="Plant output: "+fmt(t)+" tonnes a year";
+ var c=[["💰 Plant cost","$"+fmt(t/10000*7,1)+"M","$"+fmt(t/10000*38,0)+"–"+fmt(t/10000*56,0)+"M"],["⚡ Electricity a year",fmt(t*.011,0)+" GWh",fmt(t*.06,0)+"–"+fmt(t*.12,0)+" GWh"],["☠️ Toxic waste a year","0 t (water only)",fmt(t*11)+"–"+fmt(t*27)+" t"]];
+ $("#calc").innerHTML=c.map(function(r){return "<div class=card style='margin:6px 0'><b>"+r[0]+"</b><div class=big style='font-size:1.5rem'>"+r[1]+"</div><span class=mute>Evoxia claim</span><div style='color:var(--bad);font-weight:700'>"+r[2]+"</div><span class=mute>Incumbents</span></div>"}).join("")}
+$("#cap").oninput=calc;calc();
+
+var PH=[["🧪",0,"Lab proof","Jul–Dec 2026","Lab only"],["🏭",1000,"Pilot plant","2027","1,000 t/yr"],["⚙️",7200,"Demo plant","2028","7,200 t/yr"],["🚀",14400,"Commercial","2029","14,400 t/yr"]];
+var pl=$("#plan");pl.innerHTML="<div class=tline><i></i></div><div class=today>📍 Today, Nov 2026</div><div class=tn></div>";
+PH.forEach(function(p,i){var b=document.createElement("button");b.setAttribute("aria-pressed",i==0);b.innerHTML="<div class=ic>"+p[0]+"</div><b>"+p[2]+"</b><br><span class=mute>"+p[3]+"</span><div class=cb><i style='--h:"+Math.max(p[1]/144,3)+"'></i></div><small>"+p[4]+"</small>";b.onclick=function(){pl.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");$("#planD").innerHTML="<b>"+plan[i][0]+": "+plan[i][1]+"</b><p>"+plan[i][2]+"</p>"};pl.querySelector(".tn").appendChild(b)});
+
+$("#planD").innerHTML="<b>"+plan[0][0]+": "+plan[0][1]+"</b><p>"+plan[0][2]+"</p>";
+var MK=["The whole world’s solar-grade polysilicon market. Evoxia is not trying to win this; it shows how large the industry is.","India’s expected demand around 2028–30, boosted by the domestic sourcing rule. About 210 GW of solar demand needs roughly 735,000 tonnes.","The part Evoxia says it can realistically win by 2030, mainly through the big ingot and wafer builders named as customers.","The first step: pilot sales in year 0–1. Small, but enough to prove customers will buy."];
+document.querySelectorAll("#nest .c").forEach(function(c){c.onclick=function(e){e.stopPropagation();$("#mkD").innerHTML="<b>"+c.querySelector("b").textContent+"</b><p>"+MK[+c.dataset.i]+"</p>"}});
+
+var FD=[["Equipment and scaling capex",45,6.75,"#2d8a4f"],["Core R&amp;D and engineers",25,3.75,"#6bb27f"],["Process utilities and raw materials",15,2.25,"#a3cdb0"],["IP, regulation and working capital",15,2.25,"#7b6be0"]];
+var dn=$("#dn"),C=2*Math.PI*70,off=0,svg="";
+FD.forEach(function(f,i){var L=C*f[1]/100;svg+="<circle class=seg data-i="+i+" cx=100 cy=100 r=70 fill=none stroke='"+f[3]+"' stroke-width=30 stroke-dasharray='0 "+C+"' data-len="+L+" stroke-dashoffset="+(-off)+" transform='rotate(-90 100 100)'/>";off+=L});
+svg+="<text id=dc x=100 y=98 text-anchor=middle style='font:700 26px Georgia,serif;fill:var(--ink)'>₹15 Cr</text><text id=dc2 x=100 y=120 text-anchor=middle style='font:13px system-ui;fill:var(--mute)'>total ask</text>";dn.innerHTML=svg;
+$("#dl").innerHTML=FD.map(function(f,i){return "<button class=lg data-i="+i+"><i style='background:"+f[3]+"'></i><span><b>"+f[1]+"%</b> "+f[0]+"<br><small class=mute>about ₹"+f[2]+" Cr</small></span></button>"}).join("");
+function selF(i){dn.querySelectorAll(".seg").forEach(function(s,j){s.setAttribute("stroke-width",j==i?38:30)});$("#dc").textContent=FD[i][1]+"%";$("#dc2").textContent="₹"+FD[i][2]+" Cr"}
+document.querySelectorAll("#dl .lg,#dn .seg").forEach(function(e){e.onclick=e.onmouseenter=function(){selF(+e.dataset.i)}});
+setTimeout(function(){dn.querySelectorAll(".seg").forEach(function(s){s.setAttribute("stroke-dasharray",s.dataset.len+" "+C)})},300);
+</script>
+</body>
+</html>
